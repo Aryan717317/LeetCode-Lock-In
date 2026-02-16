@@ -189,14 +189,28 @@ function gatherSettings() {
 
 function saveSettings() {
     const settings = gatherSettings();
-    chrome.storage.sync.set({ settings }, () => {
+
+    // Ensure we don't save empty difficulty filter
+    if (settings.difficultyFilter.length === 0) {
+        showSaveStatus("⚠️ Select at least one difficulty");
+        return;
+    }
+
+    // Merge with existing settings to prevent overwriting with partial data if sync fails
+    const finalSettings = { ...currentSettings, ...settings };
+
+    chrome.storage.sync.set({ settings: finalSettings }, () => {
         if (chrome.runtime.lastError) {
             showSaveStatus("✗ Save failed: " + chrome.runtime.lastError.message);
             return;
         }
-        currentSettings = settings;
+        currentSettings = finalSettings;
+
+        // Force reset any active lock state to respect new settings immediately
+        chrome.runtime.sendMessage({ type: "SETTINGS_UPDATED", settings: finalSettings });
+
         showSaveStatus("✓ Settings saved!");
-        console.log("[LeetCode Lock-In] Settings saved:", settings);
+        console.log("[LeetCode Lock-In] Settings saved:", finalSettings);
     });
 }
 

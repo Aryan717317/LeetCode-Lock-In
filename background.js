@@ -291,8 +291,39 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return { settings };
       }
 
+      case "SETTINGS_UPDATED":
       case "SAVE_SETTINGS": {
-        await chrome.storage.sync.set({ settings: message.settings });
+        // 1. Persist settings if provided
+        let newSettings = message.settings;
+        if (newSettings) {
+           await chrome.storage.sync.set({ settings: newSettings });
+        } else {
+           newSettings = await getSettings();
+        }
+
+        // 2. Apply to current active lock if exists
+        const lockState = await getLockState();
+        if (lockState && lockState.isLocked) {
+           lockState.requiredCount = newSettings.requiredCount;
+           
+           // If the new count is met by what we've already solved, UNLOCK immediately
+           if (lockState.solvedCount >= lockState.requiredCount) {
+              const originalUrl = lockState.originalUrl;
+              await clearLockState();
+              await setGracePeriod();
+              
+              // Redirect all lock tabs
+              const tabs = await chrome.tabs.query({});
+              for (const tab of tabs) {
+                 if (tab.url && tab.url.includes("lock.html")) {
+                    chrome.tabs.update(tab.id, { url: originalUrl });
+                 }
+              }
+           } else {
+              // Otherwise just save the updated requirement so the UI updates on refresh
+              await setLockState(lockState);
+           }
+        }
         return { success: true };
       }
 
