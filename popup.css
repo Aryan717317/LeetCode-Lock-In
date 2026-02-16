@@ -1,0 +1,537 @@
+/* ============================================================
+   LeetCode Lock-In — Popup Styles (Revamped + Light/Dark Mode)
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ── Theme Variables ────────────────────────────── */
+
+[data-theme="dark"] {
+    --bg-base: #111116;
+    --bg-surface: #1c1c24;
+    --bg-surface-hover: #25252f;
+    --bg-elevated: #2a2a36;
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-medium: rgba(255, 255, 255, 0.10);
+    --text-primary: #eaeaf0;
+    --text-secondary: #9090a0;
+    --text-muted: #606070;
+    --accent: #f0b429;
+    --accent-hover: #e5a520;
+    --accent-subtle: rgba(240, 180, 41, 0.10);
+    --accent-glow: rgba(240, 180, 41, 0.25);
+    --green: #34d399;
+    --green-bg: rgba(52, 211, 153, 0.10);
+    --green-dim: rgba(52, 211, 153, 0.60);
+    --red: #f87171;
+    --red-bg: rgba(248, 113, 113, 0.10);
+    --yellow-bg: rgba(240, 180, 41, 0.10);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-btn: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --progress-track: rgba(255, 255, 255, 0.06);
+    --switch-off: rgba(255, 255, 255, 0.12);
+    --theme-btn-bg: rgba(255, 255, 255, 0.06);
+    --theme-btn-hover: rgba(255, 255, 255, 0.10);
+}
+
+[data-theme="light"] {
+    --bg-base: #f5f3ef;
+    --bg-surface: #ffffff;
+    --bg-surface-hover: #f9f8f6;
+    --bg-elevated: #f0eee9;
+    --border-subtle: rgba(0, 0, 0, 0.06);
+    --border-medium: rgba(0, 0, 0, 0.10);
+    --text-primary: #1a1a2e;
+    --text-secondary: #5c5c6f;
+    --text-muted: #9090a0;
+    --accent: #c48a08;
+    --accent-hover: #b07c06;
+    --accent-subtle: rgba(196, 138, 8, 0.08);
+    --accent-glow: rgba(196, 138, 8, 0.18);
+    --green: #16a34a;
+    --green-bg: rgba(22, 163, 74, 0.08);
+    --green-dim: rgba(22, 163, 74, 0.50);
+    --red: #dc2626;
+    --red-bg: rgba(220, 38, 38, 0.08);
+    --yellow-bg: rgba(196, 138, 8, 0.08);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-btn: 0 1px 2px rgba(0, 0, 0, 0.08);
+    --progress-track: rgba(0, 0, 0, 0.05);
+    --switch-off: rgba(0, 0, 0, 0.15);
+    --theme-btn-bg: rgba(0, 0, 0, 0.04);
+    --theme-btn-hover: rgba(0, 0, 0, 0.08);
+}
+
+/* ── Base ───────────────────────────────────────── */
+
+body {
+    width: 350px;
+    font-family: 'Outfit', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    transition: background 0.35s ease, color 0.35s ease;
+    -webkit-font-smoothing: antialiased;
+}
+
+.popup {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ── Top Bar ───────────────────────────────────── */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brand-icon {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.brand-name {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--accent);
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ── Theme Toggle ──────────────────────────────── */
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: var(--theme-btn-bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.theme-toggle:hover {
+    background: var(--theme-btn-hover);
+    color: var(--text-primary);
+}
+
+.theme-toggle:active {
+    transform: scale(0.92);
+}
+
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+    position: absolute;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Dark theme: show sun icon (to switch to light) */
+[data-theme="dark"] .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+[data-theme="dark"] .icon-moon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+}
+
+/* Light theme: show moon icon (to switch to dark) */
+[data-theme="light"] .icon-sun {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+}
+
+[data-theme="light"] .icon-moon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* ── Enable/Disable Switch ─────────────────────── */
+
+.switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-track {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    background: var(--switch-off);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.switch-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.switch input:checked + .switch-track {
+    background: var(--green);
+}
+
+.switch input:checked + .switch-track .switch-thumb {
+    transform: translateX(18px);
+}
+
+/* ── Status Banner ─────────────────────────────── */
+
+.status-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    box-shadow: var(--shadow-card);
+    transition: all 0.35s ease;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+    box-shadow: 0 0 6px var(--green-dim);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.status-dot.locked {
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent-glow);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.status-dot.disabled {
+    background: var(--text-muted);
+    box-shadow: none;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.status-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.status-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.1px;
+}
+
+.status-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status-icon-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--green-bg);
+    color: var(--green);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.status-icon-right.locked {
+    background: var(--accent-subtle);
+    color: var(--accent);
+}
+
+.status-icon-right.disabled {
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+}
+
+/* ── Progress Card ─────────────────────────────── */
+
+.progress-card {
+    padding: 16px;
+    background: var(--bg-surface);
+    border: 1px solid var(--accent-subtle);
+    border-radius: 12px;
+    box-shadow: var(--shadow-card);
+    transition: all 0.35s ease;
+}
+
+.progress-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.progress-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+}
+
+.progress-count {
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+}
+
+.progress-track {
+    height: 6px;
+    background: var(--progress-track);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+    border-radius: 3px;
+}
+
+.current-problem {
+    margin-bottom: 12px;
+}
+
+.problem-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.problem-name {
+    font-size: 13px;
+    font-weight: 600;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.problem-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: var(--green-bg);
+    color: var(--green);
+}
+
+.problem-badge.easy {
+    background: var(--green-bg);
+    color: var(--green);
+}
+
+.problem-badge.medium {
+    background: var(--yellow-bg);
+    color: var(--accent);
+}
+
+.problem-badge.hard {
+    background: var(--red-bg);
+    color: var(--red);
+}
+
+/* Solve Button */
+.solve-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 16px;
+    background: var(--accent);
+    color: #0a0a0f;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow-btn);
+}
+
+.solve-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px var(--accent-glow);
+}
+
+.solve-btn:active {
+    transform: translateY(0);
+}
+
+/* ── Sync Row ──────────────────────────────────── */
+
+.sync-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    transition: all 0.35s ease;
+}
+
+.sync-icon {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.sync-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Footer ────────────────────────────────────── */
+
+.popup-footer {
+    display: flex;
+}
+
+.settings-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 10px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow-btn);
+}
+
+.settings-btn:hover {
+    background: var(--bg-surface-hover);
+    border-color: var(--border-medium);
+    color: var(--text-primary);
+}
+
+.settings-btn:active {
+    transform: scale(0.98);
+}
+
+.settings-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.settings-btn:hover svg {
+    transform: rotate(45deg);
+}
+
+/* ── Animations ────────────────────────────────── */
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.status-banner {
+    animation: fade-in 0.3s ease both;
+    animation-delay: 0.05s;
+}
+
+.progress-card {
+    animation: fade-in 0.3s ease both;
+    animation-delay: 0.1s;
+}
+
+.sync-row {
+    animation: fade-in 0.3s ease both;
+    animation-delay: 0.15s;
+}
+
+.popup-footer {
+    animation: fade-in 0.3s ease both;
+    animation-delay: 0.2s;
+}

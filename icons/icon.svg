@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f23"/>
+      <stop offset="100%" style="stop-color:#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24"/>
+      <stop offset="100%" style="stop-color:#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="24" fill="url(#bg)"/>
+  <!-- Padlock body -->
+  <rect x="34" y="58" width="60" height="46" rx="8" fill="url(#gold)"/>
+  <!-- Padlock shackle -->
+  <path d="M 46 58 V 42 C 46 30 54 24 64 24 C 74 24 82 30 82 42 V 58" 
+        fill="none" stroke="url(#gold)" stroke-width="8" stroke-linecap="round"/>
+  <!-- Code brackets -->
+  <text x="64" y="88" text-anchor="middle" font-family="monospace" font-size="28" font-weight="bold" fill="#0f0f23">{;}</text>
+</svg>
